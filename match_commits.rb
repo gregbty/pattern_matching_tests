@@ -23,11 +23,11 @@ commits = CSV.read(COMMIT_FILE_PATH, liberal_parsing: true)
 commits.shift
 commits = commits[0..[options[:commits].to_i - 1, commits.size].min] unless options[:commits] == 'all'
 
-MatchFinder.pre_compile_patterns if options[:optimized]
+puts "Commits: #{commits.size}"
 
 if options[:benchmark]
-    BenchmarkRunner.run_benchmark(commits)
+    BenchmarkRunner.run_benchmark(commits, optimized: options[:optimized])
 else
-    MatchFinder.find_matches(commits, 'regex')
-    MatchFinder.find_matches(commits, 'glob')
+    MatchFinder.find_matches(commits, 'regex', optimized: options[:optimized])
+    MatchFinder.find_matches(commits, 'glob', optimized: options[:optimized])
 end

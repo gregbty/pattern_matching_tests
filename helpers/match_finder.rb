@@ -5,12 +5,10 @@ REGEX_PATTERN='^(fix|feat|chore|ci|test|refactor|perf|build|style|docs)(\([a-z]{
 GLOB_PATTERN='{fix,feat,chore,ci,test,refactor,perf,build,style,docs}{([^:]*),}{\!,}: *'
 
 class MatchFinder
-    def self.pre_compile_patterns
-        RegexMatcher.pre_compile_pattern(REGEX_PATTERN)
-    end
-
-    def self.find_matches(commits, matcher, include_log: true)
+    def self.find_matches(commits, matcher, optimized: false, include_log: true)
         match_count = 0
+
+        RegexMatcher.pre_compile_pattern(REGEX_PATTERN) if optimized && matcher == 'regex'
 
         commits.each do |(sha, message)|
             binding.pry if message.nil?

@@ -8,14 +8,14 @@ class MatchFinder
     def self.find_matches(commits, matcher, optimized: false, include_log: true)
         match_count = 0
 
-        RegexMatcher.pre_compile_pattern(REGEX_PATTERN) if optimized && matcher == 'regex'
+        RegexMatcher.pre_compile_pattern(matcher, REGEX_PATTERN) if optimized && ['re2', 'Regexp'].include?(matcher)
 
         commits.each do |(sha, message)|
             binding.pry if message.nil?
             
             case matcher
-            when 'regex'
-                matches = RegexMatcher.is_match?(REGEX_PATTERN, message)
+            when 're2', 'Regexp'
+                matches = RegexMatcher.is_match?(matcher, REGEX_PATTERN, message)
             when 'glob'
                 matches = GlobMatcher.is_match?(GLOB_PATTERN, message)
             end

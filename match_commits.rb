@@ -28,6 +28,7 @@ puts "Commits: #{commits.size}"
 if options[:benchmark]
     BenchmarkRunner.run_benchmark(commits, optimized: options[:optimized])
 else
-    MatchFinder.find_matches(commits, 'regex', optimized: options[:optimized])
+    MatchFinder.find_matches(commits, 're2', optimized: options[:optimized])
+    MatchFinder.find_matches(commits, 'Regexp', optimized: options[:optimized])
     MatchFinder.find_matches(commits, 'glob', optimized: options[:optimized])
 end

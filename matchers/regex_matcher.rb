@@ -3,8 +3,8 @@ require 're2'
 class RegexMatcher
     @@cache = {}
 
-    def self.generate_dialect_class(dialect, pattern)
-        case dialect
+    def self.generate_variant_class(variant, pattern)
+        case variant
         when 're2'
             RE2::Regexp.new(pattern)
         else
@@ -12,11 +12,11 @@ class RegexMatcher
         end
     end
 
-    def self.compile_pattern(dialect, pattern, persist_in_cache: false)
-        cache_key = "#{dialect}__#{pattern}"
+    def self.compile_pattern(variant, pattern, persist_in_cache: false)
+        cache_key = "#{variant}__#{pattern}"
         return @@cache[cache_key] if @@cache[cache_key]
 
-        compiled_expression = generate_dialect_class(dialect, pattern)
+        compiled_expression = generate_variant_class(variant, pattern)
 
         return compiled_expression unless persist_in_cache
         
@@ -24,11 +24,11 @@ class RegexMatcher
         @@cache[cache_key]
     end
 
-    def self.is_match?(dialect, pattern, candidate)
-        r = compile_pattern(dialect, pattern)
+    def self.is_match?(variant, pattern, candidate)
+        r = compile_pattern(variant, pattern)
 
         unless r
-            r = generate_dialect_class(dialect, pattern)
+            r = generate_variant_class(variant, pattern)
         end
 
         r =~ candidate

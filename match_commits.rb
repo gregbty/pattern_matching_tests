@@ -26,7 +26,7 @@ commits = commits[0..[options[:commits].to_i - 1, commits.size].min] unless opti
 puts "Commits: #{commits.size}"
 
 if options[:benchmark]
-    BenchmarkRunner.run_benchmark(commits, optimized: options[:optimized])
+    BenchmarkRunner.run_matches_benchmark(commits, optimized: options[:optimized])
 else
     MatchFinder.find_matches(commits, 're2', optimized: options[:optimized])
     MatchFinder.find_matches(commits, 'Regexp', optimized: options[:optimized])

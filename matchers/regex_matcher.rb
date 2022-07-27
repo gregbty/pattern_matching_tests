@@ -12,21 +12,20 @@ class RegexMatcher
         end
     end
 
-    def self.generate_dialect_pattern_cache_key(dialect, pattern)
-        "#{dialect}__#{pattern}"
-    end
-
-    def self.pre_compile_pattern(dialect, pattern)
-        cache_key = generate_dialect_pattern_cache_key(dialect, pattern)
+    def self.compile_pattern(dialect, pattern, persist_in_cache: false)
+        cache_key = "#{dialect}__#{pattern}"
         return @@cache[cache_key] if @@cache[cache_key]
 
-        @@cache[cache_key] = generate_dialect_class(dialect, pattern)
+        compiled_expression = generate_dialect_class(dialect, pattern)
+
+        return compiled_expression unless persist_in_cache
+        
+        @@cache[cache_key] = compiled_expression
         @@cache[cache_key]
     end
 
     def self.is_match?(dialect, pattern, candidate)
-        cache_key = generate_dialect_pattern_cache_key(dialect, pattern)
-        r = @@cache[cache_key]
+        r = compile_pattern(dialect, pattern)
 
         unless r
             r = generate_dialect_class(dialect, pattern)

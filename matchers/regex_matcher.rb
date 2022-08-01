@@ -27,10 +27,6 @@ class RegexMatcher
     def self.is_match?(variant, pattern, candidate)
         r = compile_pattern(variant, pattern)
 
-        unless r
-            r = generate_variant_class(variant, pattern)
-        end
-
         r =~ candidate
     end
 end
